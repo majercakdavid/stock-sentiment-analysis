@@ -31,6 +31,9 @@ libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
 libraryDependencies += "log4j" % "log4j" % "1.2.17"
 libraryDependencies += "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.13.0"
 libraryDependencies += "com.typesafe" % "config" % "1.2.1"
+
+
+Runtime / unmanagedClasspath += baseDirectory.value / "config"
 // Here, `libraryDependencies` is a set of dependencies, and by using `+=`,
 // we're adding the cats dependency to the set of dependencies that sbt will go
 // and fetch when it starts up.
