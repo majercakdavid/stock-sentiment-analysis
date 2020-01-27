@@ -1,0 +1,4 @@
+PRODUCER keyed-message
+topic: tweets
+key: mykeyq
+record content message
