@@ -3,9 +3,9 @@ import collection.JavaConverters._
 
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.api.common.serialization.SimpleStringSchema
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer
 
-class KafkaFlinkConsumer(topic: String) {
+class KafkaFlinkProducer(topic: String) {
 
   def getProps() = {
     val properties = new Properties()
@@ -14,7 +14,7 @@ class KafkaFlinkConsumer(topic: String) {
     properties
   }
 
-  val consumer = new FlinkKafkaConsumer(
+  val producer = new FlinkKafkaProducer(
     topic,
     new SimpleStringSchema(),
     getProps()
