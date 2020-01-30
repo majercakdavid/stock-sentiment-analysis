@@ -10,7 +10,7 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor
 import com.twitter.hbc.httpclient.auth.OAuth1
 import com.twitter.hbc.ClientBuilder
 
-class TwitterClient(keyWords: List[String], twitterConfig: Config, queueSize: Int = 100000) extends DataSourceTraits {
+class TwitterClient(twitterConfig: Config, keyWords: List[String], queueSize: Int = 100000) extends DataSourceTraits {
   val queue = new LinkedBlockingQueue[String](queueSize)
   val endPoint = new StatusesFilterEndpoint()
   endPoint.trackTerms(keyWords.asJava)
