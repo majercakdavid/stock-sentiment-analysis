@@ -9,6 +9,7 @@ pipeline {
         stage('Compile') {
             steps {
                 echo "Compiling..."
+                cd "twitter-kafka-scala/twitter-kafka-scala"
                 sh "/usr/bin/sbt compile"
             }
         }
@@ -30,6 +31,7 @@ pipeline {
         stage('Assembly') {
             steps {
                 echo "Packaging..."
+                cd "twitter-kafka-scala/twitter-kafka-scala"
                 sh "/usr/bin/sbt assembly"
             }
         }
