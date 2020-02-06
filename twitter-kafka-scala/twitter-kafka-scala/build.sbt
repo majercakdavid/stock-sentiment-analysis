@@ -16,6 +16,14 @@ name := "twitter-kafka-scala"
 organization := "ch.epfl.scala"
 version := "1.0"
 
+assemblyOutputPath in assembly := file("./app-assembly.jar")
+// assemblyJarName in assembly := s"app-assembly.jar"
+assemblyMergeStrategy in assembly := {
+  case PathList("reference.conf") => MergeStrategy.concat
+  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+  case _ => MergeStrategy.first
+}
+
 // Note, it's not required for you to define these three settings. These are
 // mostly only necessary if you intend to publish your library's binaries on a
 // place like Sonatype or Bintray.
@@ -31,7 +39,6 @@ libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
 libraryDependencies += "log4j" % "log4j" % "1.2.17"
 libraryDependencies += "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.13.0"
 libraryDependencies += "com.typesafe" % "config" % "1.2.1"
-
 
 Runtime / unmanagedClasspath += baseDirectory.value / "config"
 // Here, `libraryDependencies` is a set of dependencies, and by using `+=`,
