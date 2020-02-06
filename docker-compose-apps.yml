@@ -1,0 +1,5 @@
+version: '3'
+
+services:
+  twitter-kafka:
+    image: twitter-kafka-producer:latest

@@ -38,5 +38,22 @@ pipeline {
             }
         }
 
+        stage('Deploy and run dependencies') {
+          steps {
+            echo "Deploying docker images for dependencies"
+            sh "docker-compose -f docker-compose-elk.yml up -d --build"
+            sh "docker-compose -f docker-compose-kafka.yml up -d --build"
+          }
+        }
+
+        stage('Deploy and run app in docker') {
+          steps {
+            echo "Building app docker images"
+            sh "docker build -t twitter-kafka-producer ."
+            echo "Deploying app docker images"
+            sh "docker-compose -f docker-compose-apps.yml up -d --build"
+          }
+        }
+
     }
 }
