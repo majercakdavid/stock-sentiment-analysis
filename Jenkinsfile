@@ -9,7 +9,7 @@ pipeline {
         stage('Compile') {
             steps {
                 echo "Compiling..."
-                sh "/usr/local/bin/sbt compile"
+                sh "/usr/bin/sbt compile"
             }
         }
 
@@ -30,7 +30,7 @@ pipeline {
         stage('Assembly') {
             steps {
                 echo "Packaging..."
-                sh "/usr/local/bin/sbt assembly"
+                sh "/usr/bin/sbt assembly"
             }
         }
 
