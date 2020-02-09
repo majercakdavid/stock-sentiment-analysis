@@ -8,7 +8,7 @@ object Main {
     env.getConfig.disableClosureCleaner()
 
     val kafkaConsumer = new KafkaFlinkConsumer("tweets")
-    val kafkaProducer = new KafkaFlinkProducer("tweets-analysed")
+    val kafkaProducer = new KafkaFlinkProducer("tweets-sentiment")
 
     val tweetEvents = env
       .addSource(kafkaConsumer.consumer)
