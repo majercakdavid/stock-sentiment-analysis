@@ -31,6 +31,8 @@ libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
 libraryDependencies += "log4j" % "log4j" % "1.2.17"
 libraryDependencies += "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.13.0"
 libraryDependencies += "com.typesafe" % "config" % "1.2.1"
+libraryDependencies += "com.lightbend.akka" %% "akka-stream-alpakka-sse" % "1.1.2"
+libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.10"
 
 
 Runtime / unmanagedClasspath += baseDirectory.value / "config"
