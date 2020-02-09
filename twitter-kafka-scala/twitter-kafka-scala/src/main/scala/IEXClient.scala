@@ -14,12 +14,12 @@ import com.typesafe.config.Config
 import spray.json._
 import DefaultJsonProtocol._
 
-class IEXClient(iexConfig: Config, symbols: List[String]) extends DataSourceTraits {
+class IEXClient(iexConfig: Config, symbols: List[String], queueSize: Int = 100000) extends DataSourceTraits {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  val queue = new LinkedBlockingQueue[String](100000)
+  val queue = new LinkedBlockingQueue[String](queueSize)
   val iexKillSwitch = KillSwitches.shared("iex-kill-switch")
 
   def take = queue.take()
