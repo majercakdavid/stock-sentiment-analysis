@@ -1,11 +1,7 @@
-/* uses sbt, which i installed with homebrew. */
-/* this works without requiring the 'sbt plugin'. */
-
 pipeline {
     agent any
 
     stages {
-
         stage('Compile') {
             steps {
                 echo "Copying config file"
@@ -39,11 +35,14 @@ pipeline {
           }
         }
 
-        stage('Deploy and run app in docker') {
+        stage('Deploy and run apps in docker') {
           steps {
-            echo "Building app docker images"
-            sh "docker build -t twitter-kafka-producer ."
-            echo "Deploying app docker images"
+            dir("twitter-kafka-scala") {
+              echo "Building kafka-twitter docker image"
+              sh "docker build -t twitter-kafka-producer ."
+            }
+
+            echo "Deploying apps docker images"
             sh "docker-compose -f docker-compose-apps.yml up -d --build"
           }
         }
