@@ -10,9 +10,10 @@ object Main {
 
     val config = ConfigFactory.load("application.conf").getConfig("config")
     val twitterConfig = config.getConfig("twitter")
+    val iexConfig = config.getConfig("iex")
+    val symbols = List("TSLA", "BYND")
 
-    val twitterKeyWords = List("TSLA", "BYND")
-    val twitterClient = new TwitterClient(twitterKeyWords, twitterConfig)
+    val twitterClient = new TwitterClient(twitterConfig, symbols)
 
     val twitterProducer = new KafkaEventProducer("tweets", twitterClient)
 
