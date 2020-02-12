@@ -8,9 +8,16 @@ pipeline {
 
         stage('Compile') {
             steps {
-                echo "Compiling..."
-                dir("twitter-kafka-scala/twitter-kafka-scala") {
-                    sh "/usr/bin/sbt compile"
+                echo "Copying config file"
+            
+                configFileProvider(
+                    [configFile(fileId: '2691b741-e831-45c0-9456-0ffa7f0e3bfd', targetLocation: 'twitter-kafka-scala/twitter-kafka-scala/config/application.conf')]
+                ) {
+                    echo "File copied"
+                    echo "Compiling..."
+                    dir("twitter-kafka-scala/twitter-kafka-scala") {
+                        sh "/usr/bin/sbt compile"
+                    }
                 }
             }
         }

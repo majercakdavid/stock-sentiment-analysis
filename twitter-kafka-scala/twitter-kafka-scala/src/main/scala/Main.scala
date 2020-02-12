@@ -16,12 +16,14 @@ object Main {
 
     val twitterProducer = new KafkaEventProducer("tweets", twitterClient)
 
-    val twitterFuture : Unit = Future {
-      twitterProducer.start()
-    }
+    // val twitterFuture : Unit = Future {
+    //   twitterProducer.start()
+    // }
 
-    scala.io.StdIn.readLine()
+    twitterProducer.start()
 
-    twitterProducer.stop()
+    // scala.io.StdIn.readLine()
+
+    // twitterProducer.stop()
   }
 }
