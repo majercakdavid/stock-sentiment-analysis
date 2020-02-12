@@ -9,7 +9,7 @@ class KafkaEventProducer(topic: String, dataSource: DataSourceTraits) {
     properties.setProperty("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     properties.setProperty("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     properties.setProperty("client.id", "KafkaTwitterProducer")
-    properties.setProperty("bootstrap.servers", "broker:9092")
+    properties.setProperty("bootstrap.servers", "broker:29092")
     properties.setProperty("acks","all")
     properties.setProperty("retries","3")
     properties
