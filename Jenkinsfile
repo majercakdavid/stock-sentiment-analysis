@@ -9,7 +9,7 @@ pipeline {
         stage('Compile') {
             steps {
                 echo "Copying config file"
-            
+
                 configFileProvider(
                     [configFile(fileId: '2691b741-e831-45c0-9456-0ffa7f0e3bfd', targetLocation: 'twitter-kafka-scala/twitter-kafka-scala/config/application.conf')]
                 ) {
@@ -21,20 +21,6 @@ pipeline {
                 }
             }
         }
-
-        // stage('Test') {
-        //     steps {
-        //         echo "Testing..."
-        //         sh "/usr/local/bin/sbt test"
-        //     }
-        // }
-
-        // stage('Package') {
-        //     steps {
-        //         echo "Packaging..."
-        //         sh "/usr/local/bin/sbt package"
-        //     }
-        // }
 
         stage('Assembly') {
             steps {
