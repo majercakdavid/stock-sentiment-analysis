@@ -31,9 +31,9 @@ def getSentiment(text):
     return sentiment_value
 
 for message in consumer:
-    sentiment = getSentiment(message.value.text)
+    sentiment = getSentiment(message.value['text'])
     res = {
-        "id": message.value.id,
+        "id": message.value['id'],
         "sentiment": sentiment
     }
     producer.send('tweets-sentiment', value=res)
