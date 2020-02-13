@@ -4,8 +4,8 @@ import org.apache.flink.streaming.api.scala._
 import spray.json._
 import DefaultJsonProtocol._
 
-case class TweetText(val id: Int, val text: String)
-case class TweetSentiment(val id: Int, val sentiment: Double)
+case class TweetText(val id: Long, val text: String)
+case class TweetSentiment(val id: Long, val sentiment: Double)
 
 object FlinkProcessingJsonProtocol extends DefaultJsonProtocol {
   implicit val tweetTextFormat = jsonFormat2(TweetText)
@@ -27,7 +27,7 @@ object Main {
         msg.parseJson
           .asJsObject.getFields("id", "text") match {
             case Seq(JsNumber(id), JsString(text)) => {
-              val tweetText = TweetText(id.toInt, text)
+              val tweetText = TweetText(id.toLong, text)
               tweetText.toJson.compactPrint
             }
             case _ => throw new DeserializationException("Tweet text expected")
@@ -41,7 +41,7 @@ object Main {
       .map{msg => {
         msg.parseJson
           .asJsObject.getFields("id", "sentiment") match {
-            case Seq(JsNumber(id), JsNumber(sentiment)) => TweetSentiment(id.toInt, sentiment.toDouble)
+            case Seq(JsNumber(id), JsNumber(sentiment)) => TweetSentiment(id.toLong, sentiment.toDouble)
             case _ => throw new DeserializationException("Tweet text expected")
           }
       }}
