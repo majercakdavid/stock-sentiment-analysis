@@ -1,5 +1,17 @@
 version: '3'
 
 services:
-  twitter-kafka:
+  twitter-kafka-producer:
+    hostname: twitter-kafka-producer
+    container_name: twitter-kafka-producer
     image: twitter-kafka-producer:latest
+
+  sentiment-analyser:
+    hostname: sentiment-analyser
+    container_name: sentiment-analyser
+    image: sentiment-analyser:latest
+
+  flink-processing:
+    hostname: flink-processing
+    container_name: flink-processing
+    image: flink-processing:latest

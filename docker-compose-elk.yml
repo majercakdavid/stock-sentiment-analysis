@@ -2,6 +2,8 @@ version: '3'
 
 services:
   elasticsearch:
+    hostname: elasticsearch
+    container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
     environment:
       - cluster.name=docker-cluster
@@ -16,6 +18,8 @@ services:
       - "9200:9200"
       - "9300:9300"
   kibana:
+    hostname: kibana
+    container_name: kibana
     image: docker.elastic.co/kibana/kibana:7.5.2
     ports:
       - "5601:5601"

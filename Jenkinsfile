@@ -1,11 +1,7 @@
-/* uses sbt, which i installed with homebrew. */
-/* this works without requiring the 'sbt plugin'. */
-
 pipeline {
     agent any
 
     stages {
-
         stage('Compile') {
             steps {
                 echo "Copying config file"
@@ -18,6 +14,9 @@ pipeline {
                     dir("twitter-kafka-scala/twitter-kafka-scala") {
                         sh "/usr/bin/sbt compile"
                     }
+                    dir("flink-processing/flink-processing") {
+                        sh "/usr/bin/sbt compile"
+                    }
                 }
             }
         }
@@ -26,6 +25,9 @@ pipeline {
             steps {
                 echo "Packaging..."
                 dir("twitter-kafka-scala/twitter-kafka-scala") {
+                    sh "/usr/bin/sbt assembly"
+                }
+                dir("flink-processing/flink-processing") {
                     sh "/usr/bin/sbt assembly"
                 }
             }
@@ -39,11 +41,18 @@ pipeline {
           }
         }
 
-        stage('Deploy and run app in docker') {
+        stage('Deploy and run apps in docker') {
           steps {
-            echo "Building app docker images"
-            sh "docker build -t twitter-kafka-producer ."
-            echo "Deploying app docker images"
+            echo "Building twitter-kafka-producer docker image"
+            sh "docker build -t twitter-kafka-producer -f TwitterKafka.Dockerfile ."
+
+            echo "Building sentiment-analyser docker image"
+            sh "docker build -t sentiment-analyser -f SentimentAnalyser.Dockerfile ."
+
+            echo "Building flink-processing docker image"
+            sh "docker build -t flink-processing -f FlinkProcessing.Dockerfile ."
+
+            echo "Deploying apps docker images"
             sh "docker-compose -f docker-compose-apps.yml up -d --build"
           }
         }

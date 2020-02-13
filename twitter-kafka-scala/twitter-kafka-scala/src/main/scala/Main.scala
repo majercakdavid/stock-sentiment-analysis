@@ -14,9 +14,15 @@ object Main {
     val symbols = List("TSLA", "BYND")
 
     val twitterClient = new TwitterClient(twitterConfig, symbols)
-
     val twitterProducer = new KafkaEventProducer("tweets", twitterClient)
+    val twitterFuture : Unit = Future {
+      twitterProducer.start()
+    }
 
-    twitterProducer.start()
+    val iexClient = new IEXClient(iexConfig, symbols)
+    val iexProducer = new KafkaEventProducer("stock-prices", iexClient)
+    val iexFuture : Unit = Future {
+      iexProducer.start()
+    }
   }
 }
