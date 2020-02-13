@@ -10,5 +10,8 @@ services:
     hostname: sentiment-analyser
     container_name: sentiment-analyser
     image: sentiment-analyser:latest
-    ports: 
-      - 3000:3000
+
+  flink-processing:
+    hostname: flink-processing
+    container_name: flink-processing
+    image: flink-processing:latest
