@@ -15,5 +15,4 @@ libraryDependencies += "org.apache.flink" %% "flink-scala" % "1.9.1"
 libraryDependencies += "org.apache.flink" %% "flink-connector-kafka" % "1.9.1"
 libraryDependencies += "org.apache.flink" %% "flink-streaming-scala" % "1.9.1"
 libraryDependencies += "org.apache.kafka" %% "kafka" % "2.4.0"
-// Necessary for RPC
-libraryDependencies += "org.apache.thrift" % "libthrift" % "0.9.3"
+libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.10"

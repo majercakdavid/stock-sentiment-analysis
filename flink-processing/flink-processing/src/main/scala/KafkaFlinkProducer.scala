@@ -9,8 +9,8 @@ class KafkaFlinkProducer(topic: String) {
 
   def getProps() = {
     val properties = new Properties()
-    properties.setProperty("zookeeper.connect", "localhost:2181")
-    properties.setProperty("bootstrap.servers", "localhost:9092")
+    properties.setProperty("zookeeper.connect", "zookeeper:2181")
+    properties.setProperty("bootstrap.servers", "broker:29092")
     properties
   }
 

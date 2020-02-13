@@ -14,6 +14,9 @@ pipeline {
                     dir("twitter-kafka-scala/twitter-kafka-scala") {
                         sh "/usr/bin/sbt compile"
                     }
+                    dir("flink-processing/flink-processing") {
+                        sh "/usr/bin/sbt compile"
+                    }
                 }
             }
         }
@@ -22,6 +25,9 @@ pipeline {
             steps {
                 echo "Packaging..."
                 dir("twitter-kafka-scala/twitter-kafka-scala") {
+                    sh "/usr/bin/sbt assembly"
+                }
+                dir("flink-processing/flink-processing") {
                     sh "/usr/bin/sbt assembly"
                 }
             }

@@ -13,7 +13,9 @@ RUN pip install \
     natasha==0.10.0 \
     nltk==3.2.1 \
     yake==0.3.7 \
-    python-dateutil==2.7.5
+    python-dateutil==2.7.5 \
+    kafka-python==2.0.0 \
+    json==2.0.9
 
 RUN python -m nltk.downloader stopwords && python -m nltk.downloader punkt  && \
     python -m nltk.downloader averaged_perceptron_tagger
@@ -23,8 +25,7 @@ RUN python -c 'from flair.models import TextClassifier; _ = TextClassifier.load(
 
 RUN mkdir sentiment-analyser
 ADD sentiment-analyser/main.py sentiment-analyser/main.py
-ADD sentiment-analyser/service.thrift sentiment-analyser/service.thrift
 
-WORKDIR sentiment-analyser
+WORKDIR /sentiment-analyser
 
 ENTRYPOINT [ "python", "main.py" ]
