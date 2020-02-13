@@ -14,8 +14,7 @@ RUN pip install \
     nltk==3.2.1 \
     yake==0.3.7 \
     python-dateutil==2.7.5 \
-    kafka-python==2.0.0 \
-    json==2.0.9
+    kafka-python==2.0.0
 
 RUN python -m nltk.downloader stopwords && python -m nltk.downloader punkt  && \
     python -m nltk.downloader averaged_perceptron_tagger
