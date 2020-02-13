@@ -37,10 +37,14 @@ pipeline {
 
         stage('Deploy and run apps in docker') {
           steps {
-            dir("twitter-kafka-scala") {
-              echo "Building kafka-twitter docker image"
-              sh "docker build -t twitter-kafka-producer ."
-            }
+            echo "Building twitter-kafka-producer docker image"
+            sh "docker build -t twitter-kafka-producer -f TwitterKafka.Dockerfile ."
+
+            echo "Building sentiment-analyser docker image"
+            sh "docker build -t sentiment-analyser -f SentimentAnalyser.Dockerfile ."
+
+            echo "Building flink-processing docker image"
+            sh "docker build -t flink-processing -f FlinkProcessing.Dockerfile ."
 
             echo "Deploying apps docker images"
             sh "docker-compose -f docker-compose-apps.yml up -d --build"
