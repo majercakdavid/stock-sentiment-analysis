@@ -27,7 +27,7 @@ class IEXClient(iexConfig: Config, symbols: List[String], queueSize: Int = 10000
     val symbolsString = symbols.mkString(",")
     Source
       .repeat(HttpRequest(uri = s"https://financialmodelingprep.com/api/v3/quote/$symbolsString"))
-      .throttle(1, 10.seconds)
+      .throttle(1, 60.seconds)
       .via(iexKillSwitch.flow)
       .mapAsync(1)(Http().singleRequest(_)
         .flatMap { response => 
