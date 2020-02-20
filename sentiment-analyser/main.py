@@ -36,4 +36,4 @@ for message in consumer:
   sentiment = getSentiment(message.value['text'])
   res = message.value
   res['sentiment'] = sentiment
-  producer.send('tweets-sentiment-1', value=res)
+  producer.send('tweets-sentiment', value=res)
