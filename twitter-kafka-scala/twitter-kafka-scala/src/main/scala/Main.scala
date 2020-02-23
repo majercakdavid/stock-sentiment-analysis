@@ -21,7 +21,7 @@ object Main {
       twitterProducer.start()
     }
 
-    val iexClient = new IEXClient(iexConfig, symbols)
+    val iexClient = new IEXClient(iexConfig, stockSymbols)
     val iexProducer = new KafkaEventProducer("stock-quotes", iexClient)
     val iexFuture: Unit = Future {
       iexProducer.start()
