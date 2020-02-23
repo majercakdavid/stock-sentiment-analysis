@@ -3,7 +3,6 @@ import org.apache.flink.streaming.api.scala.{
   StreamExecutionEnvironment
 }
 import org.apache.flink.streaming.api.functions.AssignerWithPunctuatedWatermarks
-import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
 import org.apache.flink.streaming.api.watermark.Watermark
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.scala._
@@ -25,20 +24,22 @@ object Main {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.getConfig.disableClosureCleaner()
 
+    // Kafka consumer and producers for aggregating stock quotes sentiment
     val kafkaStockQuotesConsumer = new KafkaFlinkConsumer("stock-quotes")
-    val stockQuotesAggregatedEvents = env
-      .addSource(kafkaStockQuotesConsumer.consumer)
-
     val kafkaStockQuotesFastMAProducer = new KafkaFlinkProducer(
       "stock-quotes-ma-5-1"
     )
+    val kafkaStockQuotesSlowMAProducer = new KafkaFlinkProducer(
+      "stock-quotes-ma-15-1"
+    )
+
+    val stockQuotesAggregatedEvents = env
+      .addSource(kafkaStockQuotesConsumer.consumer)
+
     ProcessStockQuotes
       .process(stockQuotesAggregatedEvents, 5, 1)
       .addSink(kafkaStockQuotesFastMAProducer.producer)
 
-    val kafkaStockQuotesSlowMAProducer = new KafkaFlinkProducer(
-      "stock-quotes-ma-15-1"
-    )
     ProcessStockQuotes
       .process(stockQuotesAggregatedEvents, 15, 1)
       .addSink(kafkaStockQuotesSlowMAProducer.producer)

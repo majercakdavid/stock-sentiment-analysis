@@ -14,7 +14,6 @@ case class StockQuote(
     val price: Double,
     val timestamp: Long
 )
-
 case class StockQuoteAvg(
     val symbol: String,
     val avgPrice: Double
@@ -56,9 +55,13 @@ object ProcessStockQuotes {
       .map { msg =>
         {
           msg.parseJson.asJsObject.getFields("symbol", "price", "timestamp") match {
-            case Seq(JsString(symbol), JsNumber(price), JsNumber(timestamp)) =>
-              StockQuote(symbol, price.toDouble, timestamp.toLong)
-            case _ =>
+            case Seq(JsString(symbol), JsNumber(price), JsNumber(timestamp)) => {
+              println(
+                s"Received $symbol, price: $price, timestamp: $timestamp"
+              )
+            }
+            StockQuote(symbol, price.toDouble, timestamp.toLong)
+          case _ =>
               throw new DeserializationException(
                 "Stock quote deserializatiom error"
               )
@@ -78,6 +81,8 @@ object ProcessStockQuotes {
               lastStockQuote: StockQuote,
               extractedTimestamp: Long
           ): Watermark = {
+            // Close events by watermark which is 30 seconds
+            // less then current event time
             new Watermark(extractedTimestamp - 30000L)
           }
         }
@@ -88,6 +93,10 @@ object ProcessStockQuotes {
         Time.minutes(windowTriggerMinutes)
       )
       .aggregate(new AveragePriceAggregate())
-      .map(avgStockQuote => avgStockQuote.toJson.compactPrint)
+      .map(v => {
+        val averageJson = v.toJson.compactPrint
+        println(s"Window average $averageJson")
+        averageJson
+      })
   }
 }
