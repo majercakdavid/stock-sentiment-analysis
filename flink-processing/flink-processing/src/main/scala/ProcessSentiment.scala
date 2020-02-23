@@ -105,7 +105,7 @@ object ProcessSentiment {
           ): Watermark = {
             // Close events by watermark which is 30 seconds
             // less then current event time
-            new Watermark(extractedTimestamp - 30000)
+            new Watermark(extractedTimestamp - 30000L)
           }
         }
       )
