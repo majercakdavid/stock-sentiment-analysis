@@ -20,6 +20,26 @@ object Main {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.getConfig.disableClosureCleaner()
 
+    // Kafka consumer and producers for aggregating stock quotes sentiment
+    val kafkaStockQuotesConsumer = new KafkaFlinkConsumer("stock-quotes")
+    val kafkaStockQuotesFastMAProducer = new KafkaFlinkProducer(
+      "stock-quotes-ma-5-1"
+    )
+    val kafkaStockQuotesSlowMAProducer = new KafkaFlinkProducer(
+      "stock-quotes-ma-15-1"
+    )
+
+    val stockQuotesAggregatedEvents = env
+      .addSource(kafkaStockQuotesConsumer.consumer)
+
+    ProcessStockQuotes
+      .process(stockQuotesAggregatedEvents, 5, 1)
+      .addSink(kafkaStockQuotesFastMAProducer.producer)
+
+    ProcessStockQuotes
+      .process(stockQuotesAggregatedEvents, 15, 1)
+      .addSink(kafkaStockQuotesSlowMAProducer.producer)
+
     // Kafka consumer and producer for aggregating tweets sentiment
     val kafkaTweetsSentimentConsumer = new KafkaFlinkConsumer(
       "tweets-sentiment"

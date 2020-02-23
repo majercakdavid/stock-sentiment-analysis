@@ -21,7 +21,7 @@ object Main {
     }
 
     val iexClient = new IEXClient(iexConfig, symbols)
-    val iexProducer = new KafkaEventProducer("stock-prices", iexClient)
+    val iexProducer = new KafkaEventProducer("stock-quotes", iexClient)
     val iexFuture: Unit = Future {
       iexProducer.start()
     }
