@@ -21,12 +21,12 @@ case class TweetSentiment(
 )
 case class SymbolWindowSentiment(symbol: String, averageSentiment: Double)
 
-object FlinkProcessingJsonProtocol extends DefaultJsonProtocol {
+object ProcessSentimentJsonProtocol extends DefaultJsonProtocol {
   implicit val tweetTextFormat = jsonFormat2(TweetText)
   implicit val tweetSentimentFormat = jsonFormat3(TweetSentiment)
   implicit val symbolWindowSentimentFormat = jsonFormat2(SymbolWindowSentiment)
 }
-import FlinkProcessingJsonProtocol._
+import ProcessSentimentJsonProtocol._
 
 class AverageAggregate
     extends AggregateFunction[
