@@ -11,17 +11,18 @@ object Main {
     val config = ConfigFactory.load("application.conf").getConfig("config")
     val twitterConfig = config.getConfig("twitter")
     val iexConfig = config.getConfig("iex")
-    val symbols = List("TSLA", "BYND")
+    val stockSymbols: List[String] =
+      config.getStringList("symbols").asScala.toList
 
-    val twitterClient = new TwitterClient(twitterConfig, symbols)
+    val twitterClient = new TwitterClient(twitterConfig, stockSymbols)
     val twitterProducer = new KafkaEventProducer("tweets", twitterClient)
-    val twitterFuture : Unit = Future {
+    val twitterFuture: Unit = Future {
       twitterProducer.start()
     }
 
     val iexClient = new IEXClient(iexConfig, symbols)
     val iexProducer = new KafkaEventProducer("stock-quotes", iexClient)
-    val iexFuture : Unit = Future {
+    val iexFuture: Unit = Future {
       iexProducer.start()
     }
   }
