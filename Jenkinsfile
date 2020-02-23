@@ -7,9 +7,10 @@ pipeline {
                 echo "Copying config file"
 
                 configFileProvider(
-                    [configFile(fileId: '2691b741-e831-45c0-9456-0ffa7f0e3bfd', targetLocation: 'twitter-kafka-scala/twitter-kafka-scala/config/application.conf')]
+                    [configFile(fileId: '2691b741-e831-45c0-9456-0ffa7f0e3bfd', targetLocation: 'twitter-kafka-scala/twitter-kafka-scala/config/application.conf'),
+                    configFile(fileId: '19a58af0-4154-4406-be3c-efcdb60537b5', targetLocation: 'flink-processing/flink-processing/config/application.conf')]
                 ) {
-                    echo "File copied"
+                    echo "Files copied"
                     echo "Compiling..."
                     dir("twitter-kafka-scala/twitter-kafka-scala") {
                         sh "/usr/bin/sbt compile"
