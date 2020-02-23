@@ -45,7 +45,7 @@ object Main {
       "tweets-sentiment"
     )
     val kafkaSentimentMA5T1Producer = new KafkaFlinkProducer(
-      "symbol-sentiment-ma-5-1"
+      "symbol-sentiment-ma-15-1"
     )
     val tweetSentimentEvents = env
       .addSource(kafkaTweetsSentimentConsumer.consumer)

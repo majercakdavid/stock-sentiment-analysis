@@ -1,57 +1,58 @@
-import scala.collection.mutable.ListBuffer
+import scala.math.max
 
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.functions.AssignerWithPunctuatedWatermarks
 import org.apache.flink.streaming.api.watermark.Watermark
 import org.apache.flink.streaming.api.windowing.time.Time
-import org.apache.flink.streaming.api.windowing.windows.TimeWindow
-import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
 import org.apache.flink.api.common.functions.AggregateFunction
 import org.apache.flink.streaming.api.scala.function.ProcessWindowFunction
-import org.apache.flink.util.Collector
 
 import spray.json._
 import DefaultJsonProtocol._
 
-case class TweetText(val id: Long, val text: String)
 case class TweetSentiment(
     val symbol: String,
     val sentiment: Double,
     val timestamp: Long
 )
-case class SymbolWindowSentiment(symbol: String, averageSentiment: Double)
 
 object ProcessSentimentJsonProtocol extends DefaultJsonProtocol {
-  implicit val tweetTextFormat = jsonFormat2(TweetText)
   implicit val tweetSentimentFormat = jsonFormat3(TweetSentiment)
-  implicit val symbolWindowSentimentFormat = jsonFormat2(SymbolWindowSentiment)
 }
 import ProcessSentimentJsonProtocol._
 
 class AverageAggregate
     extends AggregateFunction[
       TweetSentiment,
-      (String, Double, Long),
-      SymbolWindowSentiment
+      (String, Double, Long, Long),
+      TweetSentiment
     ] {
-  override def createAccumulator() = ("", 0.toDouble, 0L)
+  override def createAccumulator() = ("", 0.toDouble, 0L, 0L)
 
   override def add(
       value: TweetSentiment,
-      accumulator: (String, Double, Long)
+      accumulator: (String, Double, Long, Long)
   ) = {
     (
       value.symbol,
       accumulator._2 + value.sentiment,
-      accumulator._3 + 1L
+      accumulator._3 + 1L,
+      value.timestamp
     )
   }
 
-  override def getResult(accumulator: (String, Double, Long)) =
-    SymbolWindowSentiment(accumulator._1, accumulator._2 / accumulator._3)
+  override def getResult(accumulator: (String, Double, Long, Long)) =
+    TweetSentiment(
+      accumulator._1,
+      accumulator._2 / accumulator._3,
+      accumulator._4
+    )
 
-  override def merge(a: (String, Double, Long), b: (String, Double, Long)) =
-    (a._1, a._2 + b._2, a._3 + b._3)
+  override def merge(
+      a: (String, Double, Long, Long),
+      b: (String, Double, Long, Long)
+  ) =
+    (a._1, a._2 + b._2, a._3 + b._3, max(a._4, b._4))
 }
 
 object ProcessSentiment {

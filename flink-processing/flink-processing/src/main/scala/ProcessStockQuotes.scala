@@ -1,3 +1,5 @@
+import scala.math.max
+
 import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.api.watermark.Watermark
 import org.apache.flink.streaming.api.windowing.time.Time
@@ -13,35 +15,39 @@ case class StockQuote(
     val price: Double,
     val timestamp: Long
 )
-case class StockQuoteAvg(
-    val symbol: String,
-    val avgPrice: Double
-)
 
 object ProcessStockQuotesJsonProtocol extends DefaultJsonProtocol {
-  implicit val stockQuoteFormat = jsonFormat2(StockQuoteAvg)
+  implicit val stockQuoteFormat = jsonFormat3(StockQuote)
 }
 import ProcessStockQuotesJsonProtocol._
 
 class AveragePriceAggregate
     extends AggregateFunction[
       StockQuote,
-      (String, Double, Long),
-      StockQuoteAvg
+      (String, Double, Long, Long),
+      StockQuote
     ] {
-  override def createAccumulator() = ("", 0.toDouble, 0L)
+  override def createAccumulator() = ("", 0.toDouble, 0L, 0L)
 
   override def add(
       stockQuote: StockQuote,
-      accumulator: (String, Double, Long)
+      accumulator: (String, Double, Long, Long)
   ) =
-    (stockQuote.symbol, accumulator._2 + stockQuote.price, accumulator._3 + 1L)
+    (
+      stockQuote.symbol,
+      accumulator._2 + stockQuote.price,
+      accumulator._3 + 1L,
+      stockQuote.timestamp
+    )
 
-  override def getResult(accumulator: (String, Double, Long)) =
-    StockQuoteAvg(accumulator._1, accumulator._2 / accumulator._3)
+  override def getResult(accumulator: (String, Double, Long, Long)) =
+    StockQuote(accumulator._1, accumulator._2 / accumulator._3, accumulator._4)
 
-  override def merge(a: (String, Double, Long), b: (String, Double, Long)) =
-    (a._1, a._2 + b._2, a._3 + b._3)
+  override def merge(
+      a: (String, Double, Long, Long),
+      b: (String, Double, Long, Long)
+  ) =
+    (a._1, a._2 + b._2, a._3 + b._3, max(a._4, b._4))
 }
 
 object ProcessStockQuotes {
