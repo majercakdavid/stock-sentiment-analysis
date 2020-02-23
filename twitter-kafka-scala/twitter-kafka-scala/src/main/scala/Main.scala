@@ -1,6 +1,7 @@
 import scala.util.{Success, Failure}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.collection.JavaConversions._
 
 import com.typesafe.config.ConfigFactory
 
